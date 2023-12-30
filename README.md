@@ -14,9 +14,6 @@ Next.js Frontend: The frontend of the application is built using Next.js, a Reac
 
 NextAuth Integration: Security is a top priority, and our application incorporates NextAuth for authentication. Users can securely sign in using various authentication providers, ensuring a seamless and safe experience.
 
-## Demo
-
-<img src="./project-demo.gif" alt="project-gif" width="600" height="291">
 
 ## Getting Started
 
