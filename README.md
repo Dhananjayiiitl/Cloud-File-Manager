@@ -16,7 +16,7 @@ NextAuth Integration: Security is a top priority, and our application incorporat
 
 ## Demo
 
-<img src="./project-demo.gif" alt="project-gif" height="600" width="291">
+<img src="./project-demo.gif" alt="project-gif" width="600" height="291">
 
 ## Getting Started
 
