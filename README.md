@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Cloud File Storage Web Application
+Overview:
+
+Welcome to our Cloud File Storage Web Application! This application provides a seamless and secure way for users to store and manage their files in the cloud. Leveraging the power of Google Firestore for efficient and scalable file data storage, combined with the dynamic Next.js framework for the frontend, this application offers a modern and responsive user experience.
+
+Features:
+
+Firestore Integration: Our application utilizes Google Firestore, a NoSQL document database, to store and manage file data. This ensures high performance, scalability, and real-time updates for a smooth user experience.
+
+Next.js Frontend: The frontend of the application is built using Next.js, a React framework known for its speed and flexibility. This enables us to create a single-page application with server-side rendering for optimal performance.
+
+NextAuth Integration: Security is a top priority, and our application incorporates NextAuth for authentication. Users can securely sign in using various authentication providers, ensuring a seamless and safe experience.
+
 ## Getting Started
 
 First, run the development server:
