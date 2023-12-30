@@ -1,12 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import SearchBar from "@/components/SearchBar";
-import FolderList from "@/components/Folder/FolderList";
 import FileList from "@/components/File/FileList";
+import FolderList from "@/components/Folder/FolderList";
+import SearchBar from "@/components/SearchBar";
+import { app } from "@/config/FirebaseConfig";
+import { ParentFolderIdContext } from "@/context/ParentFolderIdContext";
+import { ShowToastContext } from "@/context/ShowToastContext";
 import {
   collection,
   getDocs,
@@ -14,40 +12,28 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { app } from "@/config/FirebaseConfig";
-import { ParentFolderIdContext } from "@/context/ParentFolderIdContext";
-import { ShowToastContext } from "@/context/ShowToastContext";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export default function Home() {
-  const { data: session } = useSession();
+function FolderDetails() {
+  const router = useRouter();
+  const { name, id } = router.query;
   const [folderList, setFolderList] = useState();
-  const [fileList, setFileList] = useState();
-
   const { parentFolderId, setParentFolderId } = useContext(
     ParentFolderIdContext
   );
-  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!session) {
-      router.push("/login");
-    } else {
-      getFolderList();
-      getFileList();
-      console.log(session.user);
-    }
-    setParentFolderId(0);
-  }, [session, showToastMsg]);
-
+  const { data: session } = useSession();
   const db = getFirestore(app);
+  const { showToastMsg, setShowToastMsg } = useContext(ShowToastContext);
+  const [fileList, setFileList] = useState();
+
   const getFolderList = async () => {
     setFolderList([]);
     const q = query(
       collection(db, "Folders"),
-      where("createBy", "==", session.user.email)
+      where("createBy", "==", session.user.email),
+      where("parentFolderId", "==", id)
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
@@ -56,11 +42,19 @@ export default function Home() {
       setFolderList((folderList) => [...folderList, doc.data()]);
     });
   };
+  useEffect(() => {
+    setParentFolderId(id);
+    if (session) {
+      getFolderList();
+      getFileList();
+    }
+  }, [id, session, showToastMsg]);
+
   const getFileList = async () => {
     setFileList([]);
     const q = query(
       collection(db, "Files"),
-      where("parentFolderId", "==", 0),
+      where("parentFolderId", "==", id),
       where("createdBy", "==", session.user.email)
     );
     const querySnapshot = await getDocs(q);
@@ -70,12 +64,15 @@ export default function Home() {
       setFileList((fileList) => [...fileList, doc.data()]);
     });
   };
-  const id = 0;
+
   return (
     <div className="p-5 bg-blue-100/40 h-screen">
       <SearchBar />
-      <FolderList folderList={folderList} id={id} />
+      <div className="text-[20px] font-bold mt-5">{name}</div>
+      <FolderList folderList={folderList} />
       <FileList fileList={fileList} />
     </div>
   );
 }
+
+export default FolderDetails;
